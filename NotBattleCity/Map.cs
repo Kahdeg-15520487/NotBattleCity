@@ -1,5 +1,8 @@
 ﻿using Humper;
-using System;
+
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace NotBattleCity
 {
@@ -27,45 +30,46 @@ namespace NotBattleCity
 
         public void SetData(Terrain[] terrains, World world)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < _height; i++)
             {
-                System.Collections.Generic.List<string> ss = new System.Collections.Generic.List<string>();
+                List<string> ss = new List<string>();
                 for (int j = 0; j < _width; j++)
                 {
-                    _cells[i * _width + j] = MapCell.GetMapCell(j * 16, i * 16, terrains[i * _width + j], world);
+                    _cells[i * _width + j] = MapCell.GetMapCell(j, i, terrains[i * _width + j], world);
                     ss.Add(_cells[i * Width + j].ToString());
                 }
                 sb.AppendLine(string.Join("\t\t", ss));
             }
-            System.IO.File.WriteAllText("map.txt", sb.ToString());
+            File.WriteAllText("map.txt", sb.ToString());
         }
 
     }
 
     class MapCell
     {
+        public Microsoft.Xna.Framework.Point Coordinate { get; private set; }
         public Humper.Base.Vector2 Position { get => collision.Bounds.Location; }
-        IBox collision;
-
-        public event EventHandler<object> Hit;
+        public IBox collision;
 
         public Terrain Terrain;
 
-        private MapCell() { }
+        private MapCell(Microsoft.Xna.Framework.Point coord) { Coordinate = coord; }
+        private MapCell(int x, int y) { Coordinate = new Microsoft.Xna.Framework.Point(x, y); }
 
-        public static MapCell GetMapCell(float x, float y, Terrain terrain, World world)
+        public static MapCell GetMapCell(int x, int y, Terrain terrain, World world)
         {
-            MapCell result = new MapCell();
-
-            result.Terrain = terrain;
+            MapCell result = new MapCell(x, y)
+            {
+                Terrain = terrain
+            };
             if (terrain.GetCollisionTag() != CollisionTag.Ignore)
             {
-                result.collision = world.Create(x, y, 16, 16).AddTags(terrain.GetCollisionTag());
+                result.collision = world.Create(x * 16, y * 16, 16, 16).AddTags(terrain.GetCollisionTag());
             }
             else
             {
-                result.collision = world.Create(x, y, 0, 0).AddTags(CollisionTag.Ignore);
+                result.collision = world.Create(x * 16, y * 16, 0, 0).AddTags(CollisionTag.Ignore);
             }
             result.collision.Data = result;
 

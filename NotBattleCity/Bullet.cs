@@ -66,11 +66,72 @@ namespace NotBattleCity
                     else
                     {
                         Console.WriteLine(other.Box.Data?.ToString());
-                        GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.DestroyBullet, 0, 0));
+                        TypeSwitch.Do(other.Box.Data,
+                            TypeSwitch.Case<Player>(() => { OnCollideWithPlayer(other); }),
+                            TypeSwitch.Case<Bullet>(() => { OnCollideWithBullet(other); }),
+                            TypeSwitch.Case<MapCell>(() => { OnCollideWithMapCell(other); }),
+                            TypeSwitch.Finally(() => { GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.DestroyBullet, 0, 0)); })
+                            );
                         IsSent = true;
                     }
                 }
             }
+        }
+
+        private void OnCollideWithMapCell(IHit hit)
+        {
+            var mapcell = (MapCell)hit.Box.Data;
+
+            switch (mapcell.Terrain)
+            {
+                case Terrain.Brick:
+                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.DestroyBrick, mapcell.Coordinate.X, mapcell.Coordinate.Y));
+
+                    //resolve direction
+
+                    Direction hitfrom = Direction.South;
+                    if (hit.Normal.X > 0)
+                    {
+                        hitfrom = Direction.East;
+                    }
+                    if (hit.Normal.X < 0)
+                    {
+                        hitfrom = Direction.West;
+                    }
+
+                    if (hit.Normal.Y > 0)
+                    {
+                        hitfrom = Direction.South;
+                    }
+                    if (hit.Normal.Y < 0)
+                    {
+                        hitfrom = Direction.North;
+                    }
+
+
+                    break;
+
+                case Terrain.BrickRight:
+                case Terrain.BrickDown:
+                case Terrain.BrickLeft:
+                case Terrain.BrickUp:
+                    //destroy brick
+                    break;
+
+                case Terrain.MetalBrick:
+                    //destroy brick if supper bullet
+                    break;
+            }
+        }
+
+        private void OnCollideWithBullet(IHit hit)
+        {
+
+        }
+
+        void OnCollideWithPlayer(IHit hit)
+        {
+
         }
 
         public void Destroy()

@@ -45,6 +45,7 @@ namespace NotBattleCityServer
                             {
                                 NetOutgoingMessage msg = server.CreateMessage();
                                 msg.Write("lala");
+                                msg.Write(clients.Count);
 
                                 server.SendDiscoveryResponse(msg, message.SenderEndPoint);
                                 server.FlushSendQueue();

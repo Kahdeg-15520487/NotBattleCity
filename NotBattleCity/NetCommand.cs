@@ -21,6 +21,7 @@ namespace NotBattleCity
         CreateBullet,
         MoveBullet,
         DestroyBullet,
+        DestroyBrick,
         Disconnect
     }
 

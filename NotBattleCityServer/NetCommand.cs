@@ -15,6 +15,7 @@ namespace NotBattleCityServer
         CreateBullet,
         MoveBullet,
         DestroyBullet,
+        DestroyBrick,
         Disconnect
     }
 

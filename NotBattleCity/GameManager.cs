@@ -80,8 +80,10 @@ namespace NotBattleCity
         private void InitScreen()
         {
             SCREEN_MANAGER.AddScreen(new Screens.GameScreen(GraphicsDevice));
+            SCREEN_MANAGER.AddScreen(new Screens.LobbyScreen(GraphicsDevice));
 
-            SCREEN_MANAGER.GotoScreen("GameScreen");
+            //SCREEN_MANAGER.GotoScreen("GameScreen");
+            SCREEN_MANAGER.GotoScreen("LobbyScreen");
 
             SCREEN_MANAGER.Init();
         }

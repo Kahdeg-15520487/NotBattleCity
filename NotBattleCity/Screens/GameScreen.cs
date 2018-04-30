@@ -32,7 +32,7 @@ namespace NotBattleCity.Screens
         public static NetClient client;
         public static List<NetIncomingMessage> inQueue;
         public static List<NetOutgoingMessage> outQueue;
-        private bool Spawned;
+        public static IPEndPoint serverEndpoint;
         public static readonly int port = 14242;
 
         public GameScreen(GraphicsDevice device) : base(device, "GameScreen")
@@ -46,7 +46,9 @@ namespace NotBattleCity.Screens
             client = new NetClient(config);
             client.Start();
 
-            client.DiscoverLocalPeers(port);
+            client.Connect(serverEndpoint);
+
+            //client.DiscoverLocalPeers(port);
 
             //string ip = "localhost";
             //int port = 14242;
@@ -101,10 +103,10 @@ namespace NotBattleCity.Screens
             {
                 switch (msg.MessageType)
                 {
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        Console.WriteLine("Found server at " + msg.SenderEndPoint + " name: " + msg.ReadString());
-                        client.Connect(msg.SenderEndPoint);
-                        break;
+                    //case NetIncomingMessageType.DiscoveryResponse:
+                    //    Console.WriteLine("Found server at " + msg.SenderEndPoint + " name: " + msg.ReadString());
+                    //    client.Connect(msg.SenderEndPoint);
+                    //    break;
                     case NetIncomingMessageType.Data:
                         {
                             NetCommand netcmd = NetCommand.ReadCommand(msg);
@@ -137,6 +139,11 @@ namespace NotBattleCity.Screens
                                 case Command.DestroyBullet:
                                     Players[netcmd.ID].ExecuteCommand(netcmd);
                                     break;
+
+                                case Command.DestroyBrick:
+                                    DestroyBrick(netcmd);
+                                    break;
+
                             }
                         }
                         break;
@@ -152,6 +159,12 @@ namespace NotBattleCity.Screens
             client.Recycle(inQueue);
 
             canvas.Update(gameTime, CONTENT_MANAGER.CurrentInputState, CONTENT_MANAGER.LastInputState);
+        }
+
+        private void DestroyBrick(NetCommand netcmd)
+        {
+            map[netcmd.I1, netcmd.I2].Terrain = Terrain.Void;
+            world.Remove(map[netcmd.I1, netcmd.I2].collision);
         }
 
         private void AnswerPosition()
