@@ -1,0 +1,98 @@
+{
+  "animations": [
+	{
+	  "name": "up",
+	  "loop": true,
+	  "fps": 1.0,
+	  "transkey": null,
+	  "frames": [
+		{
+		  "x": 0,
+		  "y": 0,
+		  "w": 16,
+		  "h": 32
+		}
+	  ]
+	},
+	{
+	  "name": "left",
+	  "loop": true,
+	  "fps": 1.0,
+	  "transkey": null,
+	  "frames": [
+		{
+		  "x": 16,
+		  "y": 0,
+		  "w": 16,
+		  "h": 32
+		}
+	  ]
+	},
+	{
+	  "name": "down",
+	  "loop": true,
+	  "fps": 1.0,
+	  "transkey": null,
+	  "frames": [
+		{
+		  "x": 32,
+		  "y": 0,
+		  "w": 16,
+		  "h": 32
+		}
+	  ]
+	},
+	{
+	  "name": "right",
+	  "loop": true,
+	  "fps": 1.0,
+	  "transkey": null,
+	  "frames": [
+		{
+		  "x": 48,
+		  "y": 0,
+		  "w": 16,
+		  "h": 32
+		}
+	  ]
+	},
+    {
+      "name": "explode",
+      "loop": true,
+      "fps": 4.0,
+      "transkey": null,
+      "frames": [
+        {
+          "x": 64,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        },
+        {
+          "x": 96,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        },
+        {
+          "x": 128,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        },
+        {
+          "x": 160,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        },
+        {
+          "x": 160,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      ]
+    }
+  ]
+}
