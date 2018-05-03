@@ -19,6 +19,7 @@ namespace NotBattleCity
         public MapCell this[int x, int y]
         {
             get => _cells[y * _width + x];
+            set => _cells[y * _width + x] = value;
         }
 
         public Map(int width, int height)

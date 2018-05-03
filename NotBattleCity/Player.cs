@@ -48,7 +48,10 @@ namespace NotBattleCity
             bullet.Disapear += (o, e) =>
             {
                 bullet.IsFlying = false;
-                _world.Remove(bullet.collision);
+                if (bullet.collision != null)
+                {
+                    _world.Remove(bullet.collision);
+                }
             };
         }
 
@@ -95,16 +98,16 @@ namespace NotBattleCity
 
                 if (isMoved)
                 {
-                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.MovePlayer, Position.X, Position.Y));
+                    GameScreen.QueueCommand(ID, Command.MovePlayer, Position.X, Position.Y);
                 }
                 else if (animatedEntity.IsPlaying)
                 {
-                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.StopPlayer, 0, 0));
+                    GameScreen.QueueCommand(ID, Command.StopPlayer, 0, 0);
                 }
 
                 if (lastDir != direction)
                 {
-                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.RotatePlayer, (int)direction, 0));
+                    GameScreen.QueueCommand(ID, Command.RotatePlayer, (int)direction, 0);
                 }
 
                 if (HelperFunction.IsKeyPress(Keys.Tab))
@@ -125,7 +128,7 @@ namespace NotBattleCity
                             color = 0;
                             break;
                     }
-                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.ChangePlayerColor, color, 0));
+                    GameScreen.QueueCommand(ID, Command.ChangePlayerColor, color, 0);
                 }
 
                 if (HelperFunction.IsKeyPress(Keys.Space) && !bullet.IsFlying)
@@ -151,7 +154,7 @@ namespace NotBattleCity
                             y = Position.Y + 12;
                             break;
                     }
-                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.CreateBullet, x, y));
+                    GameScreen.QueueCommand(ID, Command.CreateBullet, x, y);
 
                 }
 

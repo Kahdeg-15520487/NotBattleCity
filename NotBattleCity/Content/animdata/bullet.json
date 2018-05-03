@@ -58,7 +58,7 @@
 	},
     {
       "name": "explode",
-      "loop": true,
+      "loop": false,
       "fps": 4.0,
       "transkey": null,
       "frames": [

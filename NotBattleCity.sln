@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiledSharp", "..\TiledSharp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotBattleCityServer", "NotBattleCityServer\NotBattleCityServer.csproj", "{50BBE98C-76DF-4996-AAAF-50F9ED7A2DCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCommand", "NetCommand\NetCommand.csproj", "{9139291E-6EAF-46DE-8BE6-3575759740C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{50BBE98C-76DF-4996-AAAF-50F9ED7A2DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50BBE98C-76DF-4996-AAAF-50F9ED7A2DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50BBE98C-76DF-4996-AAAF-50F9ED7A2DCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9139291E-6EAF-46DE-8BE6-3575759740C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9139291E-6EAF-46DE-8BE6-3575759740C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9139291E-6EAF-46DE-8BE6-3575759740C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9139291E-6EAF-46DE-8BE6-3575759740C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

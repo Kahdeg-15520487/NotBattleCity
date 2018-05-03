@@ -35,6 +35,8 @@ namespace NotBattleCity.Screens
         public static IPEndPoint serverEndpoint;
         public static readonly int port = 14242;
 
+        bool isDrawDebug = false;
+
         public GameScreen(GraphicsDevice device) : base(device, "GameScreen")
         {
         }
@@ -88,10 +90,14 @@ namespace NotBattleCity.Screens
                 client.Disconnect("Smell ya later");
                 CONTENT_MANAGER.GameInstance.Exit();
             }
+            if (HelperFunction.IsKeyDown(Keys.P))
+            {
+                isDrawDebug = !isDrawDebug;
+            }
 
             if (!Players.ContainsKey(ID) && HelperFunction.IsKeyPress(Keys.R))
             {
-                outQueue.Add(NetCommand.WriteCommand(ID, Command.CreatePlayer, 112f, 112f));
+                QueueCommand(ID, Command.CreatePlayer, 112f, 112f);
             }
 
             foreach (var player in Players.Values)
@@ -140,8 +146,8 @@ namespace NotBattleCity.Screens
                                     Players[netcmd.ID].ExecuteCommand(netcmd);
                                     break;
 
-                                case Command.DestroyBrick:
-                                    DestroyBrick(netcmd);
+                                case Command.SetTerrain:
+                                    SetTerrain(netcmd);
                                     break;
 
                             }
@@ -161,10 +167,71 @@ namespace NotBattleCity.Screens
             canvas.Update(gameTime, CONTENT_MANAGER.CurrentInputState, CONTENT_MANAGER.LastInputState);
         }
 
-        private void DestroyBrick(NetCommand netcmd)
+        public static void QueueCommand(long iD, Command cmd, int x, int y)
         {
-            map[netcmd.I1, netcmd.I2].Terrain = Terrain.Void;
-            world.Remove(map[netcmd.I1, netcmd.I2].collision);
+            outQueue.Add(NetCommand.WriteCommand(client, ID, cmd, x, y));
+        }
+
+        public static void QueueCommand(long iD, Command cmd, int x, int y, int z)
+        {
+            outQueue.Add(NetCommand.WriteCommand(client, ID, cmd, x, y, z));
+        }
+
+        public static void QueueCommand(long iD, Command cmd, float x, float y)
+        {
+            outQueue.Add(NetCommand.WriteCommand(client, ID, cmd, x, y));
+        }
+
+        public static void QueueCommand(long iD, Command cmd, long ll)
+        {
+            outQueue.Add(NetCommand.WriteCommand(client, ID, cmd, ll));
+        }
+
+        private void SetTerrain(NetCommand netcmd)
+        {
+            var t = (Terrain)netcmd.I3;
+            var mapcell = map[netcmd.I1, netcmd.I2];
+            mapcell.Terrain = t;
+            switch (t)
+            {
+                case Terrain.Void:
+                    //remove collision
+                    world.Remove(mapcell.collision);
+                    break;
+
+                case Terrain.BrickRight:
+                case Terrain.BrickDown:
+                case Terrain.BrickLeft:
+                case Terrain.BrickUp:
+                    //modify collision;
+                    world.Remove(mapcell.collision);
+
+                    int x = mapcell.Coordinate.X * 16;
+                    int y = mapcell.Coordinate.Y * 16;
+                    int w = 16;
+                    int h = 16;
+                    switch (t)
+                    {
+                        case Terrain.BrickRight:
+                            x += 8;
+                            w = 8;
+                            break;
+                        case Terrain.BrickDown:
+                            y += 8;
+                            h = 8;
+                            break;
+                        case Terrain.BrickLeft:
+                            w = 8;
+                            break;
+                        case Terrain.BrickUp:
+                            h = 8;
+                            break;
+                    }
+                    mapcell.collision = world.Create(x, y, w, h).AddTags(t.GetCollisionTag());
+                    mapcell.collision.Data = mapcell;
+                    map[netcmd.I1, netcmd.I2] = mapcell;
+                    break;
+            }
         }
 
         private void AnswerPosition()
@@ -172,7 +239,7 @@ namespace NotBattleCity.Screens
             if (Players.ContainsKey(ID))
             {
                 var pos = Players[ID].Position;
-                outQueue.Add(NetCommand.WriteCommand(ID, Command.CreatePlayer, pos.X, pos.Y));
+                QueueCommand(ID, Command.CreatePlayer, pos.X, pos.Y);
                 int color = 0;
                 switch (Players[ID].pallete)
                 {
@@ -189,9 +256,9 @@ namespace NotBattleCity.Screens
                         color = 3;
                         break;
                 }
-                outQueue.Add(NetCommand.WriteCommand(ID, Command.ChangePlayerColor, color, 0));
-                outQueue.Add(NetCommand.WriteCommand(ID, Command.RotatePlayer, (int)Players[ID].direction, 0));
-                outQueue.Add(NetCommand.WriteCommand(ID, Command.StopPlayer, 0));
+                QueueCommand(ID, Command.ChangePlayerColor, color, 0);
+                QueueCommand(ID, Command.RotatePlayer, (int)Players[ID].direction, 0);
+                QueueCommand(ID, Command.StopPlayer, 0);
             }
         }
 
@@ -219,9 +286,12 @@ namespace NotBattleCity.Screens
             }
             CONTENT_MANAGER.EndSpriteBatch(spriteBatch);
 
-            drawBatch.Begin();
-            world.DrawDebug(0, 0, 800, 600, DrawCell, DrawBox, DrawString);
-            drawBatch.End();
+            if (isDrawDebug)
+            {
+                drawBatch.Begin();
+                world.DrawDebug(0, 0, 800, 600, DrawCell, DrawBox, DrawString);
+                drawBatch.End();
+            }
         }
 
         private void DrawBox(IBox box)

@@ -42,7 +42,7 @@ namespace NotBattleCity
             var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             var mv = GetMovementVector(delta);
 
-            GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.MoveBullet, Position.X + mv.X, Position.Y + mv.Y));
+            GameScreen.QueueCommand(ID, Command.MoveBullet, Position.X + mv.X, Position.Y + mv.Y);
 
         }
 
@@ -70,7 +70,7 @@ namespace NotBattleCity
                             TypeSwitch.Case<Player>(() => { OnCollideWithPlayer(other); }),
                             TypeSwitch.Case<Bullet>(() => { OnCollideWithBullet(other); }),
                             TypeSwitch.Case<MapCell>(() => { OnCollideWithMapCell(other); }),
-                            TypeSwitch.Finally(() => { GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.DestroyBullet, 0, 0)); })
+                            TypeSwitch.Finally(() => { GameScreen.QueueCommand(ID, Command.DestroyBullet, 0, 0); })
                             );
                         IsSent = true;
                     }
@@ -85,7 +85,6 @@ namespace NotBattleCity
             switch (mapcell.Terrain)
             {
                 case Terrain.Brick:
-                    GameScreen.outQueue.Add(NetCommand.WriteCommand(ID, Command.DestroyBrick, mapcell.Coordinate.X, mapcell.Coordinate.Y));
 
                     //resolve direction
 
@@ -108,6 +107,25 @@ namespace NotBattleCity
                         hitfrom = Direction.North;
                     }
 
+                    switch (hitfrom)
+                    {
+                        case Direction.East:
+                            GameScreen.QueueCommand(ID, Command.SetTerrain, mapcell.Coordinate.X, mapcell.Coordinate.Y, (int)Terrain.BrickLeft);
+                            break;
+
+                        case Direction.West:
+                            GameScreen.QueueCommand(ID, Command.SetTerrain, mapcell.Coordinate.X, mapcell.Coordinate.Y, (int)Terrain.BrickRight);
+                            break;
+
+                        case Direction.South:
+                            GameScreen.QueueCommand(ID, Command.SetTerrain, mapcell.Coordinate.X, mapcell.Coordinate.Y, (int)Terrain.BrickUp);
+                            break;
+
+                        case Direction.North:
+                            GameScreen.QueueCommand(ID, Command.SetTerrain, mapcell.Coordinate.X, mapcell.Coordinate.Y, (int)Terrain.BrickDown);
+                            break;
+
+                    }
 
                     break;
 
@@ -116,15 +134,20 @@ namespace NotBattleCity
                 case Terrain.BrickLeft:
                 case Terrain.BrickUp:
                     //destroy brick
+                    GameScreen.QueueCommand(ID, Command.SetTerrain, mapcell.Coordinate.X, mapcell.Coordinate.Y, (int)Terrain.Void);
                     break;
 
                 case Terrain.MetalBrick:
                     //destroy brick if supper bullet
+                    if (false)
+                    {
+                        GameScreen.QueueCommand(ID, Command.SetTerrain, mapcell.Coordinate.X, mapcell.Coordinate.Y, (int)Terrain.Void);
+                    }
                     break;
             }
         }
 
-        private void OnCollideWithBullet(IHit hit)
+        void OnCollideWithBullet(IHit hit)
         {
 
         }

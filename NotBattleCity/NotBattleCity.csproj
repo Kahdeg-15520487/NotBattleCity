@@ -47,7 +47,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ExtensionMethod.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="NetCommand.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapLoader.cs" />
     <Compile Include="MapRenderer.cs" />
@@ -141,6 +140,10 @@
     <ProjectReference Include="..\..\TiledSharp\TiledSharp\TiledSharp.csproj">
       <Project>{e4130f8d-d301-4e0c-916d-489c4a23c9b1}</Project>
       <Name>TiledSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetCommand\NetCommand.csproj">
+      <Project>{9139291e-6eaf-46de-8be6-3575759740c9}</Project>
+      <Name>NetCommand</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

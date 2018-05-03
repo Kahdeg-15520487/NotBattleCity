@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Lidgren.Network;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Lidgren.Network;
-using NotBattleCity.Screens;
 
 namespace NotBattleCity
 {
-    enum Command
+    public enum Command
     {
         CreatePlayer,
         ChangePlayerColor,
@@ -21,12 +15,12 @@ namespace NotBattleCity
         CreateBullet,
         MoveBullet,
         DestroyBullet,
-        DestroyBrick,
+        SetTerrain,
         Disconnect
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    struct NetCommand
+    public struct NetCommand
     {
         [FieldOffset(0)]
         public long ID;
@@ -44,19 +38,22 @@ namespace NotBattleCity
         public int I1;
         [FieldOffset(16)]
         public int I2;
+        [FieldOffset(20)]
+        public int I3;
 
-        public static NetOutgoingMessage WriteCommand(NetCommand netcmd)
+        public static NetOutgoingMessage WriteCommand(NetPeer server, NetCommand netcmd)
         {
-            NetOutgoingMessage msg = GameScreen.client.CreateMessage();
+            NetOutgoingMessage msg = server.CreateMessage();
             msg.Write(netcmd.ID);
-            msg.Write(netcmd.CommandI);
+            msg.Write((int)netcmd.Command);
             msg.Write(netcmd.LL);
+            msg.Write(netcmd.I3);
             return msg;
         }
 
-        public static NetOutgoingMessage WriteCommand(long id, Command cmd, float x, float y)
+        public static NetOutgoingMessage WriteCommand(NetPeer server, long id, Command cmd, float x, float y)
         {
-            NetOutgoingMessage msg = GameScreen.client.CreateMessage();
+            NetOutgoingMessage msg = server.CreateMessage();
             msg.Write(id);
             msg.Write((int)cmd);
             msg.Write(x);
@@ -64,9 +61,9 @@ namespace NotBattleCity
             return msg;
         }
 
-        public static NetOutgoingMessage WriteCommand(long id, Command cmd, int x, int y)
+        public static NetOutgoingMessage WriteCommand(NetPeer server, long id, Command cmd, int x, int y)
         {
-            NetOutgoingMessage msg = GameScreen.client.CreateMessage();
+            NetOutgoingMessage msg = server.CreateMessage();
             msg.Write(id);
             msg.Write((int)cmd);
             msg.Write(x);
@@ -74,9 +71,20 @@ namespace NotBattleCity
             return msg;
         }
 
-        public static NetOutgoingMessage WriteCommand(long id, Command cmd, long ll)
+        public static NetOutgoingMessage WriteCommand(NetPeer server, long id, Command cmd, int x, int y, int z)
         {
-            NetOutgoingMessage msg = GameScreen.client.CreateMessage();
+            NetOutgoingMessage msg = server.CreateMessage();
+            msg.Write(id);
+            msg.Write((int)cmd);
+            msg.Write(x);
+            msg.Write(y);
+            msg.Write(z);
+            return msg;
+        }
+
+        public static NetOutgoingMessage WriteCommand(NetPeer server, long id, Command cmd, long ll)
+        {
+            NetOutgoingMessage msg = server.CreateMessage();
             msg.Write(id);
             msg.Write((int)cmd);
             msg.Write(ll);
@@ -85,11 +93,17 @@ namespace NotBattleCity
 
         public static NetCommand ReadCommand(NetIncomingMessage msg)
         {
+            var ID = msg.ReadInt64();
+            var Command = (Command)msg.ReadInt32();
+            var LL = msg.ReadInt64();
+            var I3 = Command == Command.SetTerrain ? msg.ReadInt32() : -1;
+
             return new NetCommand()
             {
-                ID = msg.ReadInt64(),
-                Command = (Command)msg.ReadInt32(),
-                LL = msg.ReadInt64()
+                ID = ID,
+                Command = Command,
+                LL = LL,
+                I3 = I3
             };
         }
 
@@ -120,6 +134,9 @@ namespace NotBattleCity
 
                 case Command.DestroyBullet:
                     return $"{ID} {Command} {X} {Y}";
+
+                case Command.SetTerrain:
+                    return $"{ID} {Command} {I1} {I2} {I3}";
 
                 default:
                     return $"{ID} {Command}";

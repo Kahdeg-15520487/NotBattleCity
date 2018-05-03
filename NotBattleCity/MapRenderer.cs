@@ -20,7 +20,7 @@ namespace NotBattleCity
                         continue;
                     }
                     var rect = spritesheet.SpriteRect[(int)terrain];
-                    var pos = map[j, i].Position.ToMonogameVector2();
+                    var pos = map[j, i].Coordinate.ToVector2() * 16;
                     spriteBatch.Draw(spritesheet.SpriteSheet, pos, rect, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, terrain.GetLayer());
                 }
             }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+
 using Lidgren.Network;
+using NotBattleCity;
 
 namespace NotBattleCityServer
 {
@@ -60,7 +62,7 @@ namespace NotBattleCityServer
                                 }
                                 var thingy = $"{message.SenderEndPoint.Address}:{message.SenderEndPoint.Port}:{idDict[message.SenderEndPoint]} : {data}";
                                 Console.WriteLine(thingy);
-                                NetOutgoingMessage m = NetCommand.WriteCommand(server, data.ID, data.Command, data.X, data.Y);
+                                NetOutgoingMessage m = NetCommand.WriteCommand(server, data);
 
                                 server.SendToAll(m, NetDeliveryMethod.ReliableOrdered);
                                 server.FlushSendQueue();
