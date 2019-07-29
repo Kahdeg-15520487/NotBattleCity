@@ -1,0 +1,6 @@
+[submodule "Monogame_Utilities"]
+	path = Monogame_Utilities
+	url = https://github.com/Kahdeg-15520487/Monogame_Utilities.git
+[submodule "TiledSharp"]
+	path = TiledSharp
+	url = https://github.com/marshallward/TiledSharp.git
