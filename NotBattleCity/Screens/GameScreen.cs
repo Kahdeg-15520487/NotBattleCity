@@ -50,6 +50,8 @@ namespace NotBattleCity.Screens
 
             client.Connect(serverEndpoint);
 
+            Console.WriteLine("connected to {0}", serverEndpoint);
+
             //client.DiscoverLocalPeers(port);
 
             //string ip = "localhost";

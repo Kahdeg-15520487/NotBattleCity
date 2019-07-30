@@ -74,22 +74,42 @@ namespace NotBattleCity.Screens
                 client.DiscoverLocalPeers(port);
             };
 
+            InputBox inputBox_ip = new InputBox("", new Point(400, 100), new Vector2(200, 30), CONTENT_MANAGER.Fonts["default"], Color.White, Color.Transparent);
+
             Button button_connect = new Button("Connect", new Point(500, 10), new Vector2(80, 30), CONTENT_MANAGER.Fonts["default"]);
             button_connect.Origin = new Vector2(10, 3);
             button_connect.MouseClick += (o, e) =>
             {
+
                 if (string.IsNullOrEmpty(label_selectedServer.Text))
                 {
-                    return;
+                    if (!string.IsNullOrEmpty(inputBox_ip.Text))
+                    {
+                        IPAddress ipaddr = default;
+                        if (IPAddress.TryParse(inputBox_ip.Text, out ipaddr))
+                        {
+                            _selectedServer = new ServerInfo()
+                            {
+                                Name = "unknown",
+                                IPEndPoint = new IPEndPoint(ipaddr, port)
+                            };
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
 
                 GameScreen.serverEndpoint = _selectedServer.IPEndPoint;
                 SCREEN_MANAGER.GotoScreen("GameScreen");
             };
 
+
             canvas.AddElement("label_selectedServer", label_selectedServer);
             canvas.AddElement("button_refreshServerList", button_refreshServerList);
             canvas.AddElement("button_connect", button_connect);
+            canvas.AddElement("inputBox_ip", inputBox_ip);
         }
 
         void AddServerToList(ServerInfo serverInfo)

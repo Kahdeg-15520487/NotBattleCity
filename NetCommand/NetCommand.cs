@@ -16,7 +16,8 @@ namespace NotBattleCity
         MoveBullet,
         DestroyBullet,
         SetTerrain,
-        Disconnect
+        Disconnect,
+        CheckSync
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -137,6 +138,9 @@ namespace NotBattleCity
 
                 case Command.SetTerrain:
                     return $"{ID} {Command} {I1} {I2} {I3}";
+
+                case Command.CheckSync:
+                    return $"{ID} {Command}";
 
                 default:
                     return $"{ID} {Command}";

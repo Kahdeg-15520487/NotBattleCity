@@ -45,6 +45,18 @@ namespace NotBattleCity
             File.WriteAllText("map.txt", sb.ToString());
         }
 
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 97;
+                for (int i = 0; i < _cells.Length; i++)
+                {
+                    hash = hash * 89 + _cells[i].GetHashCode();
+                }
+                return hash;
+            }
+        }
     }
 
     class MapCell
@@ -80,6 +92,18 @@ namespace NotBattleCity
         public override string ToString()
         {
             return Terrain.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 97;
+                // Suitable nullity checks etc, of course :)
+                hash = hash * 89 + Coordinate.GetHashCode();
+                hash = hash * 89 + Terrain.GetHashCode();
+                return hash;
+            }
         }
     }
 }

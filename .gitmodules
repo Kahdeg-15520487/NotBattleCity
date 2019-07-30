@@ -4,3 +4,6 @@
 [submodule "TiledSharp"]
 	path = TiledSharp
 	url = https://github.com/marshallward/TiledSharp.git
+[submodule "LilyPath"]
+	path = LilyPath
+	url = https://github.com/jaquadro/LilyPath.git

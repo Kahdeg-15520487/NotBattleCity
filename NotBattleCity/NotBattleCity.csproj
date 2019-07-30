@@ -13,7 +13,7 @@
     <AssemblyName>NotBattleCity</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -65,13 +65,13 @@
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="LilyPath">
-      <HintPath>..\..\LilyPath\LilyPath\bin\Debug\LilyPath.dll</HintPath>
+      <HintPath>..\LilyPath\LilyPath\bin\Debug\LilyPath.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -133,11 +133,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Monogame_Utilities\Monogame_Utilities.csproj">
+    <ProjectReference Include="..\Monogame_Utilities\Monogame_Utilities.csproj">
       <Project>{35d95197-c20c-4970-9a06-41b08b1d243c}</Project>
       <Name>Monogame_Utilities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TiledSharp\TiledSharp\TiledSharp.csproj">
+    <ProjectReference Include="..\TiledSharp\TiledSharp\TiledSharp.csproj">
       <Project>{e4130f8d-d301-4e0c-916d-489c4a23c9b1}</Project>
       <Name>TiledSharp</Name>
     </ProjectReference>
